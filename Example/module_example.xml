@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_example" default="compile.module.example">
+  <dirname property="module.example.basedir" file="${ant.file.module_example}"/>
+  
+  <property name="module.jdk.home.example" value="${jdk.home.android_2.2_platform}"/>
+  <property name="module.jdk.bin.example" value="${jdk.bin.android_2.2_platform}"/>
+  <property name="module.jdk.classpath.example" value="jdk.classpath.android_2.2_platform"/>
+  
+  <property name="compiler.args.example" value="${compiler.args}"/>
+  
+  <property name="example.output.dir" value="${module.example.basedir}/out/production/Example"/>
+  <property name="example.testoutput.dir" value="${module.example.basedir}/out/test/Example"/>
+  
+  <path id="example.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="example.module.production.classpath">
+    <path refid="${module.jdk.classpath.example}"/>
+    <pathelement location="${android-nettools.output.dir}"/>
+  </path>
+  
+  <path id="example.runtime.production.module.classpath">
+    <pathelement location="${example.output.dir}"/>
+    <path refid="android-nettools.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="example.module.classpath">
+    <path refid="${module.jdk.classpath.example}"/>
+    <pathelement location="${example.output.dir}"/>
+    <pathelement location="${android-nettools.testoutput.dir}"/>
+    <pathelement location="${android-nettools.output.dir}"/>
+  </path>
+  
+  <path id="example.runtime.module.classpath">
+    <pathelement location="${example.testoutput.dir}"/>
+    <pathelement location="${example.output.dir}"/>
+    <path refid="android-nettools.runtime.module.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.example">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.example">
+    <patternset refid="compiler.excluded"/>
+    <patternset refid="excluded.from.module.example"/>
+  </patternset>
+  
+  <path id="example.module.sourcepath">
+    <dirset dir="${module.example.basedir}">
+      <include name="src"/>
+      <include name="gen"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.example" depends="compile.module.example.production,compile.module.example.tests" description="Compile module Example"/>
+  
+  <target name="compile.module.example.production" depends="register.custom.compilers,compile.module.android-nettools" description="Compile module Example; production classes">
+    <mkdir dir="${example.output.dir}"/>
+    <javac2 destdir="${example.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.example}/javac">
+      <compilerarg line="${compiler.args.example}"/>
+      <bootclasspath refid="example.module.bootclasspath"/>
+      <classpath refid="example.module.production.classpath"/>
+      <src refid="example.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.example"/>
+    </javac2>
+    
+    <copy todir="${example.output.dir}">
+      <fileset dir="${module.example.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.example"/>
+      </fileset>
+      <fileset dir="${module.example.basedir}/gen">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.example"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.example.tests" depends="register.custom.compilers,compile.module.example.production" description="compile module Example; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.example" description="cleanup module">
+    <delete dir="${example.output.dir}"/>
+    <delete dir="${example.testoutput.dir}"/>
+  </target>
+</project>

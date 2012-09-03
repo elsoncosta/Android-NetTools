@@ -1,0 +1,121 @@
+package com.pc.nettools;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+
+/**
+ * Created by Pietro Caselani
+ */
+public abstract class AsyncRequest<Param, Result> extends AsyncTask<Param, Integer, Result> {
+    private AsyncRequestListener mRequestListener;
+    private CancelListener mCancelListener;
+    private ProgressListener mProgressListener;
+
+    protected Exception mException;
+
+    public AsyncRequestListener getRequestListener() {
+        return mRequestListener;
+    }
+
+    public void setRequestListener(AsyncRequestListener requestListener) {
+        mRequestListener = requestListener;
+    }
+
+    public CancelListener getCancelListener() {
+        return mCancelListener;
+    }
+
+    public void setCancelListener(CancelListener cancelListener) {
+        mCancelListener = cancelListener;
+    }
+
+    public ProgressListener getProgressListener() {
+        return mProgressListener;
+    }
+
+    public void setProgressListener(ProgressListener progressListener) {
+        mProgressListener = progressListener;
+    }
+
+    public void start(Param param) {
+        execute(param);
+    }
+
+    public boolean cancel() {
+        return cancel(true);
+    }
+
+    public abstract Result executeTask(Param param);
+
+    public static void registerNetworkReceiver(Context context, BroadcastReceiver receiver) {
+        if (context != null && receiver != null && !receiver.isOrderedBroadcast()) {
+            IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+            context.registerReceiver(receiver, intentFilter);
+        }
+    }
+    public static void unregisterNetworkReceiver(Context context, BroadcastReceiver receiver) {
+        if (context != null && receiver != null && receiver.isOrderedBroadcast())
+            context.unregisterReceiver(receiver);
+    }
+
+    public static NetworkInfo getActiveNetworkInfo(Context context) {
+        if (context == null) return null;
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getActiveNetworkInfo();
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        NetworkInfo networkInfo = getActiveNetworkInfo(context);
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    @Override
+    protected final Result doInBackground(Param... params) {
+        return executeTask(params[0]);
+    }
+
+    @Override
+    protected void onPostExecute(Result result) {
+        super.onPostExecute(result);
+
+        if (mRequestListener != null) {
+            if (mException == null && result != null)
+                mRequestListener.onSuccess(result, this);
+            else if (mException == null)
+                mException = new Exception("result is null");
+            if (mException != null && result == null)
+                mRequestListener.onFailure(mException, this);
+        }
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        super.onProgressUpdate(values);
+
+        if (mProgressListener != null) mProgressListener.onProgressChanged(values[0], this);
+    }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+
+        if (mCancelListener != null) mCancelListener.onCancelled(this);
+    }
+
+    public interface AsyncRequestListener<Result> {
+        public void onSuccess(Result result, AsyncRequest request);
+        public void onFailure(Exception exception, AsyncRequest request);
+    }
+
+    public interface CancelListener {
+        public void onCancelled(AsyncRequest request);
+    }
+
+    public interface ProgressListener {
+        public void onProgressChanged(int progress, AsyncRequest request);
+    }
+}

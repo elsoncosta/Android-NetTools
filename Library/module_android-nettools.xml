@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_android-nettools" default="compile.module.android-nettools">
+  <dirname property="module.android-nettools.basedir" file="${ant.file.module_android-nettools}"/>
+  
+  <property name="module.jdk.home.android-nettools" value="${jdk.home.android_2.2_platform}"/>
+  <property name="module.jdk.bin.android-nettools" value="${jdk.bin.android_2.2_platform}"/>
+  <property name="module.jdk.classpath.android-nettools" value="jdk.classpath.android_2.2_platform"/>
+  
+  <property name="compiler.args.android-nettools" value="${compiler.args}"/>
+  
+  <property name="android-nettools.output.dir" value="${module.android-nettools.basedir}/../Example/out/production/Android-NetTools"/>
+  <property name="android-nettools.testoutput.dir" value="${module.android-nettools.basedir}/../Example/out/test/Android-NetTools"/>
+  
+  <path id="android-nettools.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="android-nettools.module.production.classpath">
+    <path refid="${module.jdk.classpath.android-nettools}"/>
+  </path>
+  
+  <path id="android-nettools.runtime.production.module.classpath">
+    <pathelement location="${android-nettools.output.dir}"/>
+  </path>
+  
+  <path id="android-nettools.module.classpath">
+    <path refid="${module.jdk.classpath.android-nettools}"/>
+    <pathelement location="${android-nettools.output.dir}"/>
+  </path>
+  
+  <path id="android-nettools.runtime.module.classpath">
+    <pathelement location="${android-nettools.testoutput.dir}"/>
+    <pathelement location="${android-nettools.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.android-nettools">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.android-nettools">
+    <patternset refid="compiler.excluded"/>
+    <patternset refid="excluded.from.module.android-nettools"/>
+  </patternset>
+  
+  <path id="android-nettools.module.sourcepath">
+    <dirset dir="${module.android-nettools.basedir}">
+      <include name="src"/>
+      <include name="gen"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.android-nettools" depends="compile.module.android-nettools.production,compile.module.android-nettools.tests" description="Compile module Android-NetTools"/>
+  
+  <target name="compile.module.android-nettools.production" depends="register.custom.compilers" description="Compile module Android-NetTools; production classes">
+    <mkdir dir="${android-nettools.output.dir}"/>
+    <javac2 destdir="${android-nettools.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.android-nettools}/javac">
+      <compilerarg line="${compiler.args.android-nettools}"/>
+      <bootclasspath refid="android-nettools.module.bootclasspath"/>
+      <classpath refid="android-nettools.module.production.classpath"/>
+      <src refid="android-nettools.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.android-nettools"/>
+    </javac2>
+    
+    <copy todir="${android-nettools.output.dir}">
+      <fileset dir="${module.android-nettools.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.android-nettools"/>
+      </fileset>
+      <fileset dir="${module.android-nettools.basedir}/gen">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.android-nettools"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.android-nettools.tests" depends="register.custom.compilers,compile.module.android-nettools.production" description="compile module Android-NetTools; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.android-nettools" description="cleanup module">
+    <delete dir="${android-nettools.output.dir}"/>
+    <delete dir="${android-nettools.testoutput.dir}"/>
+  </target>
+</project>
