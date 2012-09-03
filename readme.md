@@ -8,6 +8,7 @@ Android framework for networking operations
 * JSON handler
 * XML (DOM, SAX) handler
 * Bitmap handler
+* File handler
 
 
 Developed By
