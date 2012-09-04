@@ -25,8 +25,8 @@ public class DOMActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_activity);
 
-        mClient = new AsyncClient("");
-        mClient.setDefaultAuthentication("", "");
+        mClient = new AsyncClient(Utils.SHOPPING_LINK);
+        mClient.setDefaultAuthentication(Utils.SHOPPING_USER, Utils.SHOPPING_PASSWORD);
 
         findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +49,7 @@ public class DOMActivity extends Activity {
     }
 
     public void getXML() {
-        mRequest = mClient.get("/shoppings.xml", new DOMResponseHandler() {
+        mRequest = mClient.get(Utils.SHOPPING_PATH_XML, new DOMResponseHandler() {
             @Override
             public void onSuccess(Document document, AsyncHttpRequest request) {
                 parse(document);

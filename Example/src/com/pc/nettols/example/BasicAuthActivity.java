@@ -16,10 +16,6 @@ import java.util.ArrayList;
  * Created by Pietro Caselani
  */
 public class BasicAuthActivity extends Activity {
-    private static final String LINK = "";
-    private static final String USER = "";
-    private static final String PASSWORD = "";
-
     private AsyncClient client;
 
     @Override
@@ -27,8 +23,8 @@ public class BasicAuthActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_activity);
 
-        client = new AsyncClient(LINK);
-        client.setDefaultAuthentication(USER, PASSWORD);
+        client = new AsyncClient(Utils.SHOPPING_LINK);
+        client.setDefaultAuthentication(Utils.SHOPPING_USER, Utils.SHOPPING_PASSWORD);
 
         findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +35,7 @@ public class BasicAuthActivity extends Activity {
     }
 
     private void getVideos() {
-        String path = "/videos.json";
+        String path = Utils.SHOPPING_PATH_JSON;
 
         client.get(path, new JSONResponseHandler() {
             @Override

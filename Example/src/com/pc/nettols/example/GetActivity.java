@@ -17,14 +17,13 @@ import java.util.HashMap;
  */
 public class GetActivity extends Activity {
     private AsyncClient client;
-    private static final String LINK = "http://www.flipstudio.net/WebServices/Tests";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_activity);
 
-        client = new AsyncClient(LINK);
+        client = new AsyncClient(Utils.FLIP_LINK);
 
         findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,7 +34,7 @@ public class GetActivity extends Activity {
     }
 
     private void startRequest() {
-        String path = "/Math.php";
+        String path = Utils.FLIP_PATH_MATH;
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("a", "6.4");
         params.put("b", "2.2");

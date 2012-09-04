@@ -10,7 +10,6 @@ import com.pc.nettools.http.DOMResponseHandler;
 import com.pc.nettools.http.FileResponseHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.*;
@@ -28,8 +27,8 @@ public class FileActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_activity);
 
-        mClient = new AsyncClient("");
-        mClient.setDefaultAuthentication("", "");
+        mClient = new AsyncClient(Utils.SHOPPING_LINK);
+        mClient.setDefaultAuthentication(Utils.SHOPPING_USER, Utils.SHOPPING_PASSWORD);
 
         findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,11 +39,11 @@ public class FileActivity extends Activity {
     }
 
     private void getFile() {
-        String path = "/shoppings.xml";
+        String path = Utils.SHOPPING_PATH_XML;
 
         String response = getCacheDir().getAbsolutePath().concat(path);
 
-        AsyncHttpRequest request = mClient.get(path, new FileResponseHandler(response) {
+        mClient.get(path, new FileResponseHandler(response) {
             @Override
             public void onSuccess(File file, AsyncHttpRequest request) {
                 parseXML(file, request);

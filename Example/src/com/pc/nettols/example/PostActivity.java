@@ -17,7 +17,6 @@ import java.util.HashMap;
  * Created by Pietro Caselani
  */
 public class PostActivity extends Activity {
-    private static final String LINK = "http://www.flipstudio.net/WebServices/Tests";
     private AsyncClient client;
 
     @Override
@@ -25,7 +24,7 @@ public class PostActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_activity);
 
-        client = new AsyncClient(LINK);
+        client = new AsyncClient(Utils.FLIP_LINK);
 
         findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,7 +35,7 @@ public class PostActivity extends Activity {
     }
 
     private void startRequest() {
-        String path = "/webservice_post.php";
+        String path = Utils.FLIP_PATH_POST;
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("a", "6.4");
         params.put("b", "2.2");
