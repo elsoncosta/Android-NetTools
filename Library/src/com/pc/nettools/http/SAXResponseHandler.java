@@ -15,23 +15,34 @@ import java.io.IOException;
  * Created by Pietro Caselani
  */
 public class SAXResponseHandler extends HttpResponseHandler {
+    private XMLReader mReader;
+    private InputSource mInputSource;
 
     public void onSuccess(XMLReader xmlReader, InputSource inputSource, AsyncHttpRequest request) {}
 
     @Override
-    public void sendSuccessMessage(ByteArrayOutputStream outputStream, AsyncHttpRequest request) {
+    public void onFinish() {
+        if (mReader != null && mInputSource != null)
+            onSuccess(mReader, mInputSource, mRequest);
+        else
+            onFailure(mException, mRequest);
+    }
+
+    @Override
+    public void sendSuccessMessage(ByteArrayOutputStream outputStream) {
         try {
             SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
             SAXParser saxParser = saxParserFactory.newSAXParser();
-            XMLReader xmlReader = saxParser.getXMLReader();
+            mReader = saxParser.getXMLReader();
 
             ByteArrayInputStream bais = new ByteArrayInputStream(outputStream.toByteArray());
 
-            onSuccess(xmlReader, new InputSource(bais), request);
+            mInputSource = new InputSource(bais);
+
         } catch (ParserConfigurationException e) {
-            onFailure(e, request);
+            mException = e;
         } catch (SAXException e) {
-            onFailure(e, request);
+            mException = e;
         }
     }
 }

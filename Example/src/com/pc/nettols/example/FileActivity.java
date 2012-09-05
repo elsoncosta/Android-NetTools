@@ -46,7 +46,7 @@ public class FileActivity extends Activity {
         mClient.get(path, new FileResponseHandler(response) {
             @Override
             public void onSuccess(File file, AsyncHttpRequest request) {
-                parseXML(file, request);
+                Toast.makeText(getApplicationContext(), file.getAbsolutePath(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -54,50 +54,5 @@ public class FileActivity extends Activity {
                 Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private void parseXML(File file, AsyncHttpRequest request) {
-        DOMResponseHandler domResponseHandler = new DOMResponseHandler() {
-            @Override
-            public void onSuccess(Document document, AsyncHttpRequest request) {
-                Element shoppingsElement = document.getDocumentElement();
-                NodeList nodeShoppings = shoppingsElement.getElementsByTagName("shopping");
-
-                ArrayList<Shopping> shoppings = new ArrayList<Shopping>(nodeShoppings.getLength());
-
-                for (int i = 0; i < nodeShoppings.getLength(); i++) {
-                    Element shoppingElement = (Element) nodeShoppings.item(i);
-                    Element idElement = (Element) shoppingElement.getElementsByTagName("id").item(0);
-                    Element nameElement = (Element) shoppingElement.getElementsByTagName("name").item(0);
-                    int id = Integer.parseInt(idElement.getChildNodes().item(0).getNodeValue());
-                    String name = nameElement.getChildNodes().item(0).getNodeValue();
-
-                    Shopping shopping = new Shopping();
-                    shopping.setId(id);
-                    shopping.setName(name);
-
-                    shoppings.add(shopping);
-                }
-            }
-
-            @Override
-            public void onFailure(Exception exception, AsyncHttpRequest request) {
-                Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
-            }
-        };
-        try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte data[] = new byte[1024];
-            int bytesRead = 0;
-            while ((bytesRead = fileInputStream.read(data)) > 0)
-                baos.write(data, 0, bytesRead);
-
-            domResponseHandler.sendSuccessMessage(baos, null);
-        } catch (FileNotFoundException e) {
-            domResponseHandler.sendFailureMessage(e, null);
-        } catch (IOException e) {
-            domResponseHandler.sendFailureMessage(e, null);
-        }
     }
 }

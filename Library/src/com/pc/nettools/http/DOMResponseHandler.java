@@ -1,6 +1,5 @@
 package com.pc.nettools.http;
 
-import android.os.AsyncTask;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -15,43 +14,31 @@ import java.io.IOException;
  * Created by Pietro Caselani
  */
 public class DOMResponseHandler extends HttpResponseHandler {
-    private AsyncHttpRequest mRequest;
+    private Document mDocument;
 
     public void onSuccess(Document document, AsyncHttpRequest request) {}
 
     @Override
-    public void sendSuccessMessage(ByteArrayOutputStream outputStream, AsyncHttpRequest request) {
-        mRequest = request;
+    public void onFinish() {
+        if (mDocument != null)
+            onSuccess(mDocument, mRequest);
+        else
+            onFailure(mException, mRequest);
+    }
 
-        AsyncTask<ByteArrayInputStream, Void, Document> parserTask = new
-                AsyncTask<ByteArrayInputStream, Void, Document>() {
-                    private Exception mException = null;
-
-                    @Override
-                    protected Document doInBackground(ByteArrayInputStream... byteArrayInputStreams) {
-                        try {
-                            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-                            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-                            return documentBuilder.parse(byteArrayInputStreams[0]);
-                        } catch (ParserConfigurationException e) {
-                            mException = e;
-                        } catch (SAXException e) {
-                            mException = e;
-                        } catch (IOException e) {
-                            mException = e;
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Document document) {
-                        super.onPostExecute(document);
-
-                        if (mException != null) onFailure(mException, mRequest);
-                        else onSuccess(document, mRequest);
-                    }
-                };
-
-        parserTask.execute(new ByteArrayInputStream(outputStream.toByteArray()));
+    @Override
+    public void sendSuccessMessage(ByteArrayOutputStream outputStream) {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = null;
+        try {
+            documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            mDocument = documentBuilder.parse(new ByteArrayInputStream(outputStream.toByteArray()));
+        } catch (ParserConfigurationException e) {
+            mException = e;
+        } catch (SAXException e) {
+            mException = e;
+        } catch (IOException e) {
+            mException = e;
+        }
     }
 }

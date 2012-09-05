@@ -91,7 +91,7 @@ public class AsyncClient {
                 link = link.concat(specialChar).concat(paramsString);
             } catch (UnsupportedEncodingException e) {
                 if (responseHandler != null)
-                    responseHandler.sendFailureMessage(e, null);
+                    responseHandler.onFailure(e, null);
             }
         }
 
@@ -100,6 +100,7 @@ public class AsyncClient {
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(getMethodName(method));
+            connection.setReadTimeout(mTimeout);
 
             int size = mDefaultHeaders.size();
             String[] keys = new String[size];
@@ -129,10 +130,10 @@ public class AsyncClient {
             return asyncHttpRequest;
         } catch (MalformedURLException e) {
             if (responseHandler != null)
-                responseHandler.sendFailureMessage(e, null);
+                responseHandler.onFailure(e, null);
         } catch (IOException e) {
             if (responseHandler != null)
-                responseHandler.sendFailureMessage(e, null);
+                responseHandler.onFailure(e, null);
         }
 
         return null;

@@ -17,7 +17,15 @@ public class FileResponseHandler extends HttpResponseHandler {
     public void onSuccess(File file, AsyncHttpRequest request) {}
 
     @Override
-    public void sendSuccessMessage(ByteArrayOutputStream outputStream, AsyncHttpRequest request) {
+    public void onFinish() {
+        if (mResponseFile != null)
+            onSuccess(mResponseFile, mRequest);
+        else
+            onFailure(mException, mRequest);
+    }
+
+    @Override
+    public void sendSuccessMessage(ByteArrayOutputStream outputStream) {
         try {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());
             FileOutputStream fos = new FileOutputStream(mResponseFile);
@@ -28,12 +36,12 @@ public class FileResponseHandler extends HttpResponseHandler {
 
             fos.flush();
             fos.close();
-
-            onSuccess(mResponseFile, request);
         } catch (FileNotFoundException e) {
-            onFailure(e, request);
+            mResponseFile = null;
+            mException = e;
         } catch (IOException e) {
-            onFailure(e, request);
+            mResponseFile = null;
+            mException = e;
         }
     }
 }

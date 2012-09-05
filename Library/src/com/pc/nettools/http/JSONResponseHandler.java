@@ -13,23 +13,35 @@ import java.util.Iterator;
  * Created by Pietro Caselani
  */
 public class JSONResponseHandler extends HttpResponseHandler {
+    private ArrayList mArray;
+    private HashMap mMap;
 
     public void onSuccess(ArrayList json, AsyncHttpRequest request) {}
     public void onSuccess(HashMap json, AsyncHttpRequest request) {}
 
     @Override
-    public void sendSuccessMessage(ByteArrayOutputStream outputStream, AsyncHttpRequest request) {
+    public void onFinish() {
+        if (mArray != null)
+            onSuccess(mArray, mRequest);
+        else if (mMap != null)
+            onSuccess(mMap, mRequest);
+        else
+            onFailure(mException, mRequest);
+    }
+
+    @Override
+    public void sendSuccessMessage(ByteArrayOutputStream outputStream) {
         String jsonString = outputStream.toString();
 
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
-            onSuccess((HashMap) parse(jsonObject), request);
+            mMap = (HashMap) parse(jsonObject);
         } catch (JSONException e) {
             try {
                 JSONArray jsonArray = new JSONArray(jsonString);
-                onSuccess((ArrayList) parse(jsonArray), request);
+                mArray = (ArrayList) parse(jsonArray);
             } catch (JSONException e1) {
-                onFailure(e1, request);
+                mException = e1;
             }
         }
     }

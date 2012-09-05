@@ -36,8 +36,14 @@ public class AsyncHttpRequest extends AsyncRequest<HttpURLConnection, Void> {
             mInputStream = mConnection.getInputStream();
             mContentLength = mConnection.getContentLength();
             mStatusCode = mConnection.getResponseCode();
+
+            if (mResponseHandler != null)
+                mResponseHandler.sendResponse(mInputStream, mStatusCode, mContentLength, mException, this);
         } catch (IOException e) {
             mException = e;
+        } finally {
+            if (connection != null)
+                mConnection.disconnect();
         }
 
         return null;
@@ -48,8 +54,6 @@ public class AsyncHttpRequest extends AsyncRequest<HttpURLConnection, Void> {
         super.onPostExecute(aVoid);
 
         if (mResponseHandler != null)
-            mResponseHandler.sendResponse(mInputStream, mStatusCode, mContentLength, mException, this);
-
-        mConnection.disconnect();
+            mResponseHandler.onFinish();
     }
 }

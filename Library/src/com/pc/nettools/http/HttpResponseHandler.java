@@ -7,8 +7,10 @@ import java.io.InputStream;
 /**
  * Created by Pietro Caselani
  */
-public class HttpResponseHandler {
+public abstract class HttpResponseHandler {
     private boolean mIsCancelled;
+    protected Exception mException;
+    protected AsyncHttpRequest mRequest;
 
     public HttpResponseHandler() {
         mIsCancelled = false;
@@ -19,12 +21,12 @@ public class HttpResponseHandler {
     public void onProgress(int progress, AsyncHttpRequest request) {}
     public void onCanceled() {}
 
-    public void sendSuccessMessage(ByteArrayOutputStream outputStream, AsyncHttpRequest request) {
-        onSuccess(outputStream, request);
-    }
+    public abstract void onFinish();
 
-    public void sendFailureMessage(Exception exception, AsyncHttpRequest request) {
-        onFailure(exception, request);
+    public abstract void sendSuccessMessage(ByteArrayOutputStream outputStream);
+
+    public void sendFailureMessage(Exception exception) {
+        mException = exception;
     }
 
     final void cancel() {
@@ -34,6 +36,7 @@ public class HttpResponseHandler {
 
     final void sendResponse(InputStream inputStream, int statusCode, int contentLength,
                             Exception exception, AsyncHttpRequest request) {
+        mRequest = request;
         if (exception == null) {
             if (inputStream != null) {
                 boolean shouldUpdateProgress = contentLength > 0;
@@ -55,11 +58,11 @@ public class HttpResponseHandler {
                     baos.flush();
                     baos.close();
 
-                    sendSuccessMessage(baos, request);
+                    sendSuccessMessage(baos);
                 } catch (IOException e) {
-                    sendFailureMessage(e, request);
+                    sendFailureMessage(e);
                 }
-            } else sendFailureMessage(null, request);
-        } else sendFailureMessage(exception, request);
+            } else sendFailureMessage(null);
+        } else sendFailureMessage(exception);
     }
 }

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.pc.nettools.http.AsyncClient;
 import com.pc.nettools.http.AsyncHttpRequest;
 import com.pc.nettools.http.HttpResponseHandler;
+import com.pc.nettools.http.StringResponseHandler;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
@@ -40,10 +41,10 @@ public class PostActivity extends Activity {
         params.put("a", "6.4");
         params.put("b", "2.2");
 
-        client.post(path, params, new HttpResponseHandler() {
+        client.post(path, params, new StringResponseHandler() {
             @Override
-            public void onSuccess(ByteArrayOutputStream outputStream, AsyncHttpRequest request) {
-                ((TextView) findViewById(R.id.textView_content)).setText(outputStream.toString());
+            public void onSuccess(String string, AsyncHttpRequest request) {
+                ((TextView) findViewById(R.id.textView_content)).setText(string);
             }
 
             @Override
