@@ -36,7 +36,7 @@ public class PostActivity extends Activity {
     }
 
     private void startRequest() {
-        String path = Utils.FLIP_PATH_POST;
+        String path = Utils.FLIP_POST;
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("a", "6.4");
         params.put("b", "2.2");

@@ -27,8 +27,8 @@ public class SAXActivity extends Activity implements ShoppingsHandler.ShoppingHa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_activity);
 
-        mClient = new AsyncClient(Utils.SHOPPING_LINK);
-        mClient.setDefaultAuthentication(Utils.SHOPPING_USER, Utils.SHOPPING_PASSWORD);
+        mClient = new AsyncClient(Utils.BASIC_LINK);
+        mClient.setDefaultAuthentication(Utils.BASIC_USER, Utils.BASIC_PASS);
 
         findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +39,7 @@ public class SAXActivity extends Activity implements ShoppingsHandler.ShoppingHa
     }
 
     private void getXML() {
-        mClient.get(Utils.SHOPPING_PATH_XML, new SAXResponseHandler() {
+        mClient.get(Utils.BASIC_PATH_XML, new SAXResponseHandler() {
             @Override
             public void onSuccess(XMLReader xmlReader, InputSource inputSource, AsyncHttpRequest request) {
                 try {

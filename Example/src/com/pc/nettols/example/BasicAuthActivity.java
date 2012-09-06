@@ -23,8 +23,8 @@ public class BasicAuthActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_activity);
 
-        client = new AsyncClient(Utils.SHOPPING_LINK);
-        client.setDefaultAuthentication(Utils.SHOPPING_USER, Utils.SHOPPING_PASSWORD);
+        client = new AsyncClient(Utils.BASIC_LINK);
+        client.setDefaultAuthentication(Utils.BASIC_USER, Utils.BASIC_PASS);
 
         findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,7 +35,7 @@ public class BasicAuthActivity extends Activity {
     }
 
     private void getVideos() {
-        String path = Utils.SHOPPING_PATH_JSON;
+        String path = Utils.BASIC_PATH_JSON;
 
         client.get(path, new JSONResponseHandler() {
             @Override

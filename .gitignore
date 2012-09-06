@@ -33,3 +33,5 @@ proguard-project.txt
 .DS_Store
 tmp
 out
+
+Utils.java
