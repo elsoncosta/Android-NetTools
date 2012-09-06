@@ -31,19 +31,18 @@ public class AsyncHttpRequest extends AsyncRequest<HttpURLConnection, Void> {
     public Void executeTask(HttpURLConnection connection) {
         try {
             mConnection = connection;
-            mConnection.connect();
-
-            mInputStream = mConnection.getInputStream();
-            mContentLength = mConnection.getContentLength();
-            mStatusCode = mConnection.getResponseCode();
+            connection.connect();
 
             if (mResponseHandler != null)
-                mResponseHandler.sendResponse(mInputStream, mStatusCode, mContentLength, mException, this);
+                mResponseHandler.sendResponse(connection.getInputStream(), connection.getResponseCode(),
+                        connection.getContentLength(), mException, this);
         } catch (IOException e) {
+            if (mResponseHandler != null)
+                mResponseHandler.sendResponse(null, 0, -1, e, this);
             mException = e;
         } finally {
             if (connection != null)
-                mConnection.disconnect();
+                connection.disconnect();
         }
 
         return null;

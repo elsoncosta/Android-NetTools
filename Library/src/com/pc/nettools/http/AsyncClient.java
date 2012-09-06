@@ -81,7 +81,7 @@ public class AsyncClient {
     }
 
     private AsyncHttpRequest configureRequest(String path, HashMap<String, String> params, int method, HttpResponseHandler responseHandler) {
-        String link = mBaseLink.concat(path);
+        String link = mBaseLink == null ? path : mBaseLink.concat(path);
         String paramsString = null;
 
         if (params != null) {
