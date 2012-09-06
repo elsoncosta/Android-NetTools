@@ -10,6 +10,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Pietro Caselani
@@ -26,6 +27,14 @@ public class SAXResponseHandler extends HttpResponseHandler {
             onSuccess(mReader, mInputSource, mRequest);
         else
             onFailure(mException, mRequest);
+    }
+
+    @Override
+    public Object getResponseObject() {
+        ArrayList<Object> objects = new ArrayList<Object>(2);
+        objects.add(mReader);
+        objects.add(mInputSource);
+        return objects;
     }
 
     @Override

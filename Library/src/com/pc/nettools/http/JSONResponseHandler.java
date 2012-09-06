@@ -30,6 +30,13 @@ public class JSONResponseHandler extends HttpResponseHandler {
     }
 
     @Override
+    public Object getResponseObject() {
+        if (mArray != null) return mArray;
+        if (mMap != null) return mMap;
+        return null;
+    }
+
+    @Override
     public void sendSuccessMessage(ByteArrayOutputStream outputStream) {
         String jsonString = outputStream.toString();
 

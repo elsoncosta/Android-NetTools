@@ -24,6 +24,7 @@ public abstract class HttpResponseHandler {
     public abstract void onFinish();
 
     public abstract void sendSuccessMessage(ByteArrayOutputStream outputStream);
+    public abstract Object getResponseObject();
 
     public void sendFailureMessage(Exception exception) {
         mException = exception;

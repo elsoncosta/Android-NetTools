@@ -25,6 +25,11 @@ public class FileResponseHandler extends HttpResponseHandler {
     }
 
     @Override
+    public Object getResponseObject() {
+        return mResponseFile;
+    }
+
+    @Override
     public void sendSuccessMessage(ByteArrayOutputStream outputStream) {
         try {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());

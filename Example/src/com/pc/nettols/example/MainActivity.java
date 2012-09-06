@@ -44,6 +44,8 @@ public class MainActivity extends ListActivity {
             case 6:
                 activityClass = FileActivity.class;
                 break;
+            case 7:
+                activityClass = TasksActivity.class;
         }
 
         Intent intent = new Intent(getApplicationContext(), activityClass);

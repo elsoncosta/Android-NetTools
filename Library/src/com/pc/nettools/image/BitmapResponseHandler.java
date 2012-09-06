@@ -24,6 +24,11 @@ public class BitmapResponseHandler extends HttpResponseHandler {
     }
 
     @Override
+    public Object getResponseObject() {
+        return mBitmap;
+    }
+
+    @Override
     public void sendSuccessMessage(ByteArrayOutputStream outputStream) {
         Bitmap bitmap = BitmapFactory.decodeByteArray(outputStream.toByteArray(), 0, outputStream.size());
         if (bitmap != null)

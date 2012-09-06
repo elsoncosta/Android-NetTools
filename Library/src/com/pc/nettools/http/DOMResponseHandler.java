@@ -27,6 +27,11 @@ public class DOMResponseHandler extends HttpResponseHandler {
     }
 
     @Override
+    public Object getResponseObject() {
+        return mDocument;
+    }
+
+    @Override
     public void sendSuccessMessage(ByteArrayOutputStream outputStream) {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = null;

@@ -20,6 +20,11 @@ public class StringResponseHandler extends HttpResponseHandler {
     }
 
     @Override
+    public Object getResponseObject() {
+        return mString;
+    }
+
+    @Override
     public void sendSuccessMessage(ByteArrayOutputStream outputStream) {
         try {
             mString = outputStream.toString("UTF-8");

@@ -12,8 +12,6 @@ import android.os.AsyncTask;
  */
 public abstract class AsyncRequest<Param, Result> extends AsyncTask<Param, Integer, Result> {
     private AsyncRequestListener mRequestListener;
-    private CancelListener mCancelListener;
-    private ProgressListener mProgressListener;
 
     protected Exception mException;
 
@@ -23,22 +21,6 @@ public abstract class AsyncRequest<Param, Result> extends AsyncTask<Param, Integ
 
     public void setRequestListener(AsyncRequestListener requestListener) {
         mRequestListener = requestListener;
-    }
-
-    public CancelListener getCancelListener() {
-        return mCancelListener;
-    }
-
-    public void setCancelListener(CancelListener cancelListener) {
-        mCancelListener = cancelListener;
-    }
-
-    public ProgressListener getProgressListener() {
-        return mProgressListener;
-    }
-
-    public void setProgressListener(ProgressListener progressListener) {
-        mProgressListener = progressListener;
     }
 
     public void start(Param param) {
@@ -96,26 +78,20 @@ public abstract class AsyncRequest<Param, Result> extends AsyncTask<Param, Integ
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
 
-        if (mProgressListener != null) mProgressListener.onProgressChanged(values[0], this);
+        if (mRequestListener != null) mRequestListener.onProgressChanged(values[0], this);
     }
 
     @Override
     protected void onCancelled() {
         super.onCancelled();
 
-        if (mCancelListener != null) mCancelListener.onCancelled(this);
+        if (mRequestListener != null) mRequestListener.onCancelled(this);
     }
 
     public interface AsyncRequestListener<Result> {
         public void onSuccess(Result result, AsyncRequest request);
         public void onFailure(Exception exception, AsyncRequest request);
-    }
-
-    public interface CancelListener {
-        public void onCancelled(AsyncRequest request);
-    }
-
-    public interface ProgressListener {
         public void onProgressChanged(int progress, AsyncRequest request);
+        public void onCancelled(AsyncRequest request);
     }
 }

@@ -13,6 +13,12 @@
     <string name="sax">Sax</string>
     <string name="file">File</string>
 
+    <string name="json">JSON</string>
+    <string name="xmlDom">XML DOM</string>
+    <string name="xmlSax">XML SAX</string>
+    <string name="image">Image</string>
+    <string name="tasks">Tasks</string>
+
     <string-array name="examples">
         <item>@string/request_get</item>
         <item>@string/request_post</item>
@@ -21,6 +27,7 @@
         <item>@string/dom</item>
         <item>@string/sax</item>
         <item>@string/file</item>
+        <item>@string/tasks</item>
     </string-array>
 
 </resources>

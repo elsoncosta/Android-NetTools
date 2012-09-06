@@ -20,6 +20,7 @@
         <activity android:name=".DOMActivity" android:label="@string/dom" />
         <activity android:name=".SAXActivity" android:label="@string/sax"/>
         <activity android:name=".FileActivity" android:label="@string/file"/>
+        <activity android:name=".TasksActivity" android:label="@string/tasks"/>
 
     </application>
 
