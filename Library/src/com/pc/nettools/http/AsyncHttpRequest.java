@@ -5,6 +5,7 @@ import com.pc.nettools.AsyncRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -21,6 +22,21 @@ public class AsyncHttpRequest extends AsyncRequest<HttpURLConnection, Void> {
         mStatusCode = 0;
         mContentLength = 0;
         mException = null;
+    }
+
+    public static AsyncHttpRequest request(String link, HttpResponseHandler responseHandler) {
+        try {
+            URL url = new URL(link);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            AsyncHttpRequest request = new AsyncHttpRequest(responseHandler);
+            request.start(connection);
+            return request;
+        } catch (MalformedURLException e) {
+            if (responseHandler != null) responseHandler.onFailure(e, null);
+        } catch (IOException e) {
+            if (responseHandler != null) responseHandler.onFailure(e, null);
+        }
+        return null;
     }
 
     public URL getURL() {
@@ -46,6 +62,13 @@ public class AsyncHttpRequest extends AsyncRequest<HttpURLConnection, Void> {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean cancel() {
+        if (mResponseHandler != null)
+            mResponseHandler.cancel();
+        return super.cancel();
     }
 
     @Override
