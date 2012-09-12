@@ -53,6 +53,7 @@ public abstract class HttpResponseHandler {
                             offset += bytesRead;
                             progress = (100 * offset) / contentLength;
                             onProgress(progress, request);
+                            request.updateProgress(progress);
                         }
                     }
 

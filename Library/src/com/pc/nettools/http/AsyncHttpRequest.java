@@ -43,6 +43,10 @@ public class AsyncHttpRequest extends AsyncRequest<HttpURLConnection, Void> {
         return mConnection != null ? mConnection.getURL() : null;
     }
 
+    protected void updateProgress(int progress) {
+        publishProgress(progress);
+    }
+
     @Override
     public Void executeTask(HttpURLConnection connection) {
         try {
