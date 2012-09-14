@@ -9,6 +9,7 @@ import com.pc.nettools.http.AsyncClient;
 import com.pc.nettools.http.AsyncHttpRequest;
 
 import java.lang.ref.WeakReference;
+import java.net.URL;
 import java.util.HashMap;
 
 /**
@@ -87,7 +88,7 @@ public class ImageDownloader {
         AsyncHttpRequest request = getBitmapDownloaderTask(imageView);
 
         if (request != null) {
-            String bitmapLink = request.getURL().toString();
+            String bitmapLink = request.getURL() != null ? request.getURL().toString() : null;
             if (bitmapLink == null || !bitmapLink.equals(link)) request.cancel();
             else return false;
         }
@@ -106,7 +107,7 @@ public class ImageDownloader {
     private static AsyncHttpRequest getBitmapDownloaderTask(ImageView imageView) {
         if (imageView != null) {
             Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof DownloadedDrawable) {
+            if (drawable != null && drawable instanceof DownloadedDrawable) {
                 DownloadedDrawable downloadedDrawable = (DownloadedDrawable) drawable;
                 return downloadedDrawable.getBitmapDownloaderTask();
             }
