@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Looper;
 
 /**
  * Created by Pietro Caselani
@@ -53,6 +54,10 @@ public abstract class AsyncRequest<Param, Result> extends AsyncTask<Param, Integ
     public static boolean isNetworkAvailable(Context context) {
         NetworkInfo networkInfo = getActiveNetworkInfo(context);
         return networkInfo != null && networkInfo.isConnected();
+    }
+
+    public static boolean isMainThread() {
+        return Looper.myLooper() != null && Looper.myLooper() == Looper.getMainLooper();
     }
 
     @Override
