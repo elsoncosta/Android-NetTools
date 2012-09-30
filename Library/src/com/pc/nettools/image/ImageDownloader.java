@@ -47,26 +47,6 @@ public class ImageDownloader {
         }
 
         if (cancel(link, imageView)) {
-            /*
-            BitmapDownloaderTask bitmapDownloaderTask = new BitmapDownloaderTask(imageView);
-            bitmapDownloaderTask.setRequestListener(this);
-            @Override
-            public void onSuccess(Bitmap o, AsyncRequest request) {
-                BitmapDownloaderTask requestTask = (BitmapDownloaderTask) request;
-                cacheImage(requestTask.getLink(), (Bitmap) o);
-
-                ImageView imageView = requestTask.getImageView();
-
-                BitmapDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
-                if (requestTask == bitmapDownloaderTask && imageView != null) imageView.setImageBitmap((Bitmap) o);
-            }
-
-            @Override
-            public void onFailure(Exception exception, AsyncRequest request) {
-
-            }
-            */
-
             AsyncHttpRequest request = mClient.get(link, new BitmapResponseHandler() {
                 @Override
                 public void onSuccess(Bitmap bitmap, AsyncHttpRequest request) {
@@ -80,7 +60,6 @@ public class ImageDownloader {
 
             DownloadedDrawable downloadedDrawable = new DownloadedDrawable(request);
             imageView.setImageDrawable(downloadedDrawable);
-//            bitmapDownloaderTask.start(link);
         }
     }
 

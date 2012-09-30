@@ -1,6 +1,6 @@
 package com.pc.nettools.http;
 
-import com.pc.nettools.AsyncRequest;
+import com.pc.nettools.AsyncOperation;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,16 +11,12 @@ import java.net.URL;
 /**
  * Created by Pietro Caselani
  */
-public class AsyncHttpRequest extends AsyncRequest<HttpURLConnection, Void> {
+public class AsyncHttpRequest extends AsyncOperation<HttpURLConnection, Void> {
     private HttpResponseHandler mResponseHandler;
-    private InputStream mInputStream;
-    private int mStatusCode, mContentLength;
     private HttpURLConnection mConnection;
 
     public AsyncHttpRequest(HttpResponseHandler responseHandler) {
         mResponseHandler = responseHandler;
-        mStatusCode = 0;
-        mContentLength = 0;
         mException = null;
     }
 

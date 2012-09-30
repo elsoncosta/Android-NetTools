@@ -11,7 +11,7 @@ import android.os.Looper;
 /**
  * Created by Pietro Caselani
  */
-public abstract class AsyncRequest<Param, Result> extends AsyncTask<Param, Integer, Result> {
+public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Integer, Result> {
     private AsyncRequestListener mRequestListener;
 
     protected Exception mException;
@@ -94,9 +94,9 @@ public abstract class AsyncRequest<Param, Result> extends AsyncTask<Param, Integ
     }
 
     public interface AsyncRequestListener<Result> {
-        public void onSuccess(Result result, AsyncRequest request);
-        public void onFailure(Exception exception, AsyncRequest request);
-        public void onProgressChanged(int progress, AsyncRequest request);
-        public void onCancelled(AsyncRequest request);
+        public void onSuccess(Result result, AsyncOperation request);
+        public void onFailure(Exception exception, AsyncOperation request);
+        public void onProgressChanged(int progress, AsyncOperation request);
+        public void onCancelled(AsyncOperation request);
     }
 }
