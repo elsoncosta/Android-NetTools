@@ -37,7 +37,7 @@ public class BasicAuthActivity extends Activity {
     private void getVideos() {
         String path = Utils.BASIC_PATH_JSON;
 
-        client.get(path, new JSONResponseHandler() {
+        final AsyncHttpRequest request = client.get(path, new JSONResponseHandler() {
             @Override
             public void onSuccess(ArrayList json, AsyncHttpRequest request) {
                 ((TextView) findViewById(R.id.textView_content)).setText(json.toString());
@@ -51,6 +51,19 @@ public class BasicAuthActivity extends Activity {
             @Override
             public void onProgress(int progress, AsyncHttpRequest request) {
                 ((ProgressBar) findViewById(R.id.progressBar)).setProgress(progress);
+            }
+
+            @Override
+            public void onCanceled() {
+                Toast.makeText(getApplicationContext(), "Response cancelled", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean cancelled = request.cancel();
+                Toast.makeText(getApplicationContext(), "Cancelado: " + String.valueOf(cancelled), Toast.LENGTH_SHORT).show();
             }
         });
     }
