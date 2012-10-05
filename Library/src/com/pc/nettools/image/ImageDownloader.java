@@ -49,7 +49,7 @@ public class ImageDownloader {
         if (cancel(link, imageView)) {
             AsyncHttpRequest request = mClient.get(link, new BitmapResponseHandler() {
                 @Override
-                public void onSuccess(Bitmap bitmap, AsyncHttpRequest request) {
+                public void onSuccess(Bitmap bitmap, AsyncHttpRequest request, int statusCode) {
                     cacheImage(request.getURL().toString(), bitmap);
 
                     AsyncHttpRequest otherRequest = getBitmapDownloaderTask(imageView);

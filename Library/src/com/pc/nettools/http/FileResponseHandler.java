@@ -14,14 +14,14 @@ public class FileResponseHandler extends HttpResponseHandler {
         mResponseFile = new File(responseFilePath);
     }
 
-    public void onSuccess(File file, AsyncHttpRequest request) {}
+    public void onSuccess(File file, AsyncHttpRequest request, int statusCode) {}
 
     @Override
     public void onFinish() {
         if (mResponseFile != null)
-            onSuccess(mResponseFile, mRequest);
+            onSuccess(mResponseFile, mRequest, mStatusCode);
         else
-            onFailure(mException, mRequest);
+            onFailure(mException, mRequest, mStatusCode);
     }
 
     @Override

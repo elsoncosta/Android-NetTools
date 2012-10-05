@@ -51,12 +51,12 @@ public class DOMActivity extends Activity {
     public void getXML() {
         mRequest = mClient.get(Utils.BASIC_PATH_XML, new DOMResponseHandler() {
             @Override
-            public void onSuccess(Document document, AsyncHttpRequest request) {
+            public void onSuccess(Document document, AsyncHttpRequest request, int statusCode) {
                 parse(document);
             }
 
             @Override
-            public void onFailure(Exception exception, AsyncHttpRequest request) {
+            public void onFailure(Exception exception, AsyncHttpRequest request, int statusCode) {
                 Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
             }
 

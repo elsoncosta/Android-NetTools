@@ -43,12 +43,12 @@ public class PostActivity extends Activity {
 
         client.post(path, params, new StringResponseHandler() {
             @Override
-            public void onSuccess(String string, AsyncHttpRequest request) {
+            public void onSuccess(String string, AsyncHttpRequest request, int statusCode) {
                 ((TextView) findViewById(R.id.textView_content)).setText(string);
             }
 
             @Override
-            public void onFailure(Exception exception, AsyncHttpRequest request) {
+            public void onFailure(Exception exception, AsyncHttpRequest request, int statusCode) {
                 Toast.makeText(getApplication(), exception.toString(), Toast.LENGTH_LONG).show();
             }
 

@@ -13,14 +13,14 @@ import java.io.ByteArrayOutputStream;
 public class BitmapResponseHandler extends HttpResponseHandler {
     private Bitmap mBitmap;
 
-    public void onSuccess(Bitmap bitmap, AsyncHttpRequest request) {}
+    public void onSuccess(Bitmap bitmap, AsyncHttpRequest request, int statusCode) {}
 
     @Override
     public void onFinish() {
         if (mBitmap != null)
-            onSuccess(mBitmap, mRequest);
+            onSuccess(mBitmap, mRequest, mStatusCode);
         else
-            onFailure(mException, mRequest);
+            onFailure(mException, mRequest, mStatusCode);
     }
 
     @Override

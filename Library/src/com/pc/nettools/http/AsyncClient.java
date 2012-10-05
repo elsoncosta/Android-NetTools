@@ -84,6 +84,8 @@ public class AsyncClient {
         String link = mBaseLink == null ? path : mBaseLink.concat(path);
         String paramsString = null;
 
+        int statusCode = -1;
+
         if (params != null) {
             try {
                 paramsString = getParamsString(params);
@@ -91,7 +93,7 @@ public class AsyncClient {
                 link = link.concat(specialChar).concat(paramsString);
             } catch (UnsupportedEncodingException e) {
                 if (responseHandler != null)
-                    responseHandler.onFailure(e, null);
+                    responseHandler.onFailure(e, null, statusCode);
             }
         }
 
@@ -130,10 +132,10 @@ public class AsyncClient {
             return asyncHttpRequest;
         } catch (MalformedURLException e) {
             if (responseHandler != null)
-                responseHandler.onFailure(e, null);
+                responseHandler.onFailure(e, null, statusCode);
         } catch (IOException e) {
             if (responseHandler != null)
-                responseHandler.onFailure(e, null);
+                responseHandler.onFailure(e, null, statusCode);
         }
 
         return null;

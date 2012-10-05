@@ -41,18 +41,18 @@ public class SAXActivity extends Activity implements ShoppingsHandler.ShoppingHa
     private void getXML() {
         mClient.get(Utils.BASIC_PATH_XML, new SAXResponseHandler() {
             @Override
-            public void onSuccess(XMLReader xmlReader, InputSource inputSource, AsyncHttpRequest request) {
+            public void onSuccess(XMLReader xmlReader, InputSource inputSource, AsyncHttpRequest request, int statusCode) {
                 try {
                     parse(xmlReader, inputSource);
                 } catch (IOException e) {
-                    onFailure(e, request);
+                    onFailure(e, request, statusCode);
                 } catch (SAXException e) {
-                    onFailure(e, request);
+                    onFailure(e, request, statusCode);
                 }
             }
 
             @Override
-            public void onFailure(Exception exception, AsyncHttpRequest request) {
+            public void onFailure(Exception exception, AsyncHttpRequest request, int statusCode) {
                 Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
             }
 

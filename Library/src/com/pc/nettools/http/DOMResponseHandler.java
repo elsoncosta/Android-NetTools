@@ -16,14 +16,14 @@ import java.io.IOException;
 public class DOMResponseHandler extends HttpResponseHandler {
     private Document mDocument;
 
-    public void onSuccess(Document document, AsyncHttpRequest request) {}
+    public void onSuccess(Document document, AsyncHttpRequest request, int statusCode) {}
 
     @Override
     public void onFinish() {
         if (mDocument != null)
-            onSuccess(mDocument, mRequest);
+            onSuccess(mDocument, mRequest, mStatusCode);
         else
-            onFailure(mException, mRequest);
+            onFailure(mException, mRequest, mStatusCode);
     }
 
     @Override

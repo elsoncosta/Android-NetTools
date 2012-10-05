@@ -16,17 +16,17 @@ public class JSONResponseHandler extends HttpResponseHandler {
     private ArrayList mArray;
     private HashMap mMap;
 
-    public void onSuccess(ArrayList json, AsyncHttpRequest request) {}
-    public void onSuccess(HashMap json, AsyncHttpRequest request) {}
+    public void onSuccess(ArrayList json, AsyncHttpRequest request, int statusCode) {}
+    public void onSuccess(HashMap json, AsyncHttpRequest request, int statusCode) {}
 
     @Override
     public void onFinish() {
         if (mArray != null)
-            onSuccess(mArray, mRequest);
+            onSuccess(mArray, mRequest, mStatusCode);
         else if (mMap != null)
-            onSuccess(mMap, mRequest);
+            onSuccess(mMap, mRequest, mStatusCode);
         else
-            onFailure(mException, mRequest);
+            onFailure(mException, mRequest, mStatusCode);
     }
 
     @Override

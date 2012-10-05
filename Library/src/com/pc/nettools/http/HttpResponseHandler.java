@@ -9,6 +9,7 @@ import java.io.InputStream;
  */
 public abstract class HttpResponseHandler {
     private boolean mIsCancelled;
+    protected int mStatusCode;
     protected Exception mException;
     protected AsyncHttpRequest mRequest;
 
@@ -16,8 +17,8 @@ public abstract class HttpResponseHandler {
         mIsCancelled = false;
     }
 
-    public void onSuccess(ByteArrayOutputStream outputStream, AsyncHttpRequest request) {}
-    public void onFailure(Exception exception, AsyncHttpRequest request) {}
+    public void onSuccess(ByteArrayOutputStream outputStream, AsyncHttpRequest request, int statusCode) {}
+    public void onFailure(Exception exception, AsyncHttpRequest request, int statusCode) {}
     public void onProgress(int progress, AsyncHttpRequest request) {}
     public void onCanceled() {}
 
@@ -38,6 +39,7 @@ public abstract class HttpResponseHandler {
     final void sendResponse(InputStream inputStream, int statusCode, int contentLength,
                             Exception exception, AsyncHttpRequest request) {
         mRequest = request;
+        mStatusCode = statusCode;
         if (exception == null) {
             if (inputStream != null) {
                 boolean shouldUpdateProgress = contentLength > 0;

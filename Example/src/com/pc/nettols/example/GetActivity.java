@@ -41,12 +41,12 @@ public class GetActivity extends Activity {
 
         client.get(path, params, new JSONResponseHandler() {
             @Override
-            public void onSuccess(HashMap json, AsyncHttpRequest request) {
+            public void onSuccess(HashMap json, AsyncHttpRequest request, int statusCode) {
                 ((TextView) findViewById(R.id.textView_content)).setText(json.toString());
             }
 
             @Override
-            public void onFailure(Exception exception, AsyncHttpRequest request) {
+            public void onFailure(Exception exception, AsyncHttpRequest request, int statusCode) {
                 Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
             }
 

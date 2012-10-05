@@ -19,14 +19,14 @@ public class SAXResponseHandler extends HttpResponseHandler {
     private XMLReader mReader;
     private InputSource mInputSource;
 
-    public void onSuccess(XMLReader xmlReader, InputSource inputSource, AsyncHttpRequest request) {}
+    public void onSuccess(XMLReader xmlReader, InputSource inputSource, AsyncHttpRequest request, int statusCode) {}
 
     @Override
     public void onFinish() {
         if (mReader != null && mInputSource != null)
-            onSuccess(mReader, mInputSource, mRequest);
+            onSuccess(mReader, mInputSource, mRequest, mStatusCode);
         else
-            onFailure(mException, mRequest);
+            onFailure(mException, mRequest, mStatusCode);
     }
 
     @Override

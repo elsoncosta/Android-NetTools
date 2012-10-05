@@ -39,12 +39,12 @@ public class BasicAuthActivity extends Activity {
 
         final AsyncHttpRequest request = client.get(path, new JSONResponseHandler() {
             @Override
-            public void onSuccess(ArrayList json, AsyncHttpRequest request) {
+            public void onSuccess(ArrayList json, AsyncHttpRequest request, int statusCode) {
                 ((TextView) findViewById(R.id.textView_content)).setText(json.toString());
             }
 
             @Override
-            public void onFailure(Exception exception, AsyncHttpRequest request) {
+            public void onFailure(Exception exception, AsyncHttpRequest request, int statusCode) {
                 Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
             }
 

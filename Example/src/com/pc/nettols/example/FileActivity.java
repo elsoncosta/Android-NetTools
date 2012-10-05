@@ -45,12 +45,12 @@ public class FileActivity extends Activity {
 
         mClient.get(path, new FileResponseHandler(response) {
             @Override
-            public void onSuccess(File file, AsyncHttpRequest request) {
+            public void onSuccess(File file, AsyncHttpRequest request, int statusCode) {
                 Toast.makeText(getApplicationContext(), file.getAbsolutePath(), Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onFailure(Exception exception, AsyncHttpRequest request) {
+            public void onFailure(Exception exception, AsyncHttpRequest request, int statusCode) {
                 Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
             }
         });

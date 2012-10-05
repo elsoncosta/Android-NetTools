@@ -9,14 +9,14 @@ import java.io.UnsupportedEncodingException;
 public class StringResponseHandler extends HttpResponseHandler {
     private String mString;
 
-    public void onSuccess(String string, AsyncHttpRequest request) {}
+    public void onSuccess(String string, AsyncHttpRequest request, int statusCode) {}
 
     @Override
     public void onFinish() {
         if (mString != null)
-            onSuccess(mString, mRequest);
+            onSuccess(mString, mRequest, mStatusCode);
         else
-            onFailure(mException, mRequest);
+            onFailure(mException, mRequest, mStatusCode);
     }
 
     @Override
