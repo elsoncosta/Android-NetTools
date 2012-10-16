@@ -21,18 +21,16 @@ public class AsyncHttpRequest extends AsyncOperation<HttpURLConnection, Void> {
     }
 
     public static AsyncHttpRequest request(String link, HttpResponseHandler responseHandler) {
-        int statusCode = -1;
         try {
             URL url = new URL(link);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            statusCode = connection.getResponseCode();
             AsyncHttpRequest request = new AsyncHttpRequest(responseHandler);
             request.start(connection);
             return request;
         } catch (MalformedURLException e) {
-            if (responseHandler != null) responseHandler.onFailure(e, null, statusCode);
+            if (responseHandler != null) responseHandler.onFailure(e, null, -1);
         } catch (IOException e) {
-            if (responseHandler != null) responseHandler.onFailure(e, null, statusCode);
+            if (responseHandler != null) responseHandler.onFailure(e, null, -1);
         }
         return null;
     }
