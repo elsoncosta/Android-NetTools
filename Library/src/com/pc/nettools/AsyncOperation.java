@@ -12,16 +12,16 @@ import android.os.Looper;
  * Created by Pietro Caselani
  */
 public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Integer, Result> {
-    private AsyncRequestListener mRequestListener;
+    private AsyncOperationListener mOperationListener;
 
     protected Exception mException;
 
-    public AsyncRequestListener getRequestListener() {
-        return mRequestListener;
+    public AsyncOperationListener getOperationListener() {
+        return mOperationListener;
     }
 
-    public void setRequestListener(AsyncRequestListener requestListener) {
-        mRequestListener = requestListener;
+    public void setOperationListener(AsyncOperationListener requestListener) {
+        mOperationListener = requestListener;
     }
 
     public void start(Param param) {
@@ -69,13 +69,13 @@ public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Int
     protected void onPostExecute(Result result) {
         super.onPostExecute(result);
 
-        if (mRequestListener != null) {
+        if (mOperationListener != null) {
             if (mException == null && result != null)
-                mRequestListener.onSuccess(result, this);
+                mOperationListener.onSuccess(result, this);
             else if (mException == null)
                 mException = new Exception("result is null");
             if (mException != null && result == null)
-                mRequestListener.onFailure(mException, this);
+                mOperationListener.onFailure(mException, this);
         }
     }
 
@@ -83,17 +83,17 @@ public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Int
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
 
-        if (mRequestListener != null) mRequestListener.onProgressChanged(values[0], this);
+        if (mOperationListener != null) mOperationListener.onProgressChanged(values[0], this);
     }
 
     @Override
     protected void onCancelled() {
         super.onCancelled();
 
-        if (mRequestListener != null) mRequestListener.onCancelled(this);
+        if (mOperationListener != null) mOperationListener.onCancelled(this);
     }
 
-    public interface AsyncRequestListener<Result> {
+    public interface AsyncOperationListener<Result> {
         public void onSuccess(Result result, AsyncOperation request);
         public void onFailure(Exception exception, AsyncOperation request);
         public void onProgressChanged(int progress, AsyncOperation request);

@@ -1,4 +1,4 @@
-package com.pc.nettols.example;
+package com.pc.nettools.example;
 
 /**
  * Created by Pietro Caselani

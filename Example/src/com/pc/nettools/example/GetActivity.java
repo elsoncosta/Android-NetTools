@@ -1,4 +1,4 @@
-package com.pc.nettols.example;
+package com.pc.nettools.example;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,12 +10,12 @@ import com.pc.nettools.http.AsyncClient;
 import com.pc.nettools.http.AsyncHttpRequest;
 import com.pc.nettools.http.JSONResponseHandler;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Pietro Caselani
  */
-public class BasicAuthActivity extends Activity {
+public class GetActivity extends Activity {
     private AsyncClient client;
 
     @Override
@@ -23,23 +23,25 @@ public class BasicAuthActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_activity);
 
-        client = new AsyncClient(Utils.BASIC_LINK);
-        client.setDefaultAuthentication(Utils.BASIC_USER, Utils.BASIC_PASS);
+        client = new AsyncClient(Utils.FLIP_LINK);
 
         findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getVideos();
+                startRequest();
             }
         });
     }
 
-    private void getVideos() {
-        String path = Utils.BASIC_PATH_JSON;
+    private void startRequest() {
+        String path = Utils.FLIP_GET;
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("a", "6.4");
+        params.put("b", "2.2");
 
-        final AsyncHttpRequest request = client.get(path, new JSONResponseHandler() {
+        client.get(path, params, new JSONResponseHandler() {
             @Override
-            public void onSuccess(ArrayList json, AsyncHttpRequest request, int statusCode) {
+            public void onSuccess(HashMap json, AsyncHttpRequest request, int statusCode) {
                 ((TextView) findViewById(R.id.textView_content)).setText(json.toString());
             }
 
@@ -51,19 +53,6 @@ public class BasicAuthActivity extends Activity {
             @Override
             public void onProgress(int progress, AsyncHttpRequest request) {
                 ((ProgressBar) findViewById(R.id.progressBar)).setProgress(progress);
-            }
-
-            @Override
-            public void onCanceled() {
-                Toast.makeText(getApplicationContext(), "Response cancelled", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean cancelled = request.cancel();
-                Toast.makeText(getApplicationContext(), "Cancelado: " + String.valueOf(cancelled), Toast.LENGTH_SHORT).show();
             }
         });
     }

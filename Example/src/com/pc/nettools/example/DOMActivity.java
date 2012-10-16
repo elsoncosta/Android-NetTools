@@ -1,4 +1,4 @@
-package com.pc.nettols.example;
+package com.pc.nettools.example;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.pc.nettols.example;
+package com.pc.nettools.example;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,14 +8,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.pc.nettools.http.AsyncClient;
 import com.pc.nettools.http.AsyncHttpRequest;
-import com.pc.nettools.http.JSONResponseHandler;
+import com.pc.nettools.http.StringResponseHandler;
 
 import java.util.HashMap;
 
 /**
  * Created by Pietro Caselani
  */
-public class GetActivity extends Activity {
+public class PostActivity extends Activity {
     private AsyncClient client;
 
     @Override
@@ -34,20 +34,20 @@ public class GetActivity extends Activity {
     }
 
     private void startRequest() {
-        String path = Utils.FLIP_GET;
+        String path = Utils.FLIP_POST;
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("a", "6.4");
         params.put("b", "2.2");
 
-        client.get(path, params, new JSONResponseHandler() {
+        client.post(path, params, new StringResponseHandler() {
             @Override
-            public void onSuccess(HashMap json, AsyncHttpRequest request, int statusCode) {
-                ((TextView) findViewById(R.id.textView_content)).setText(json.toString());
+            public void onSuccess(String string, AsyncHttpRequest request, int statusCode) {
+                ((TextView) findViewById(R.id.textView_content)).setText(string);
             }
 
             @Override
             public void onFailure(Exception exception, AsyncHttpRequest request, int statusCode) {
-                Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplication(), exception.toString(), Toast.LENGTH_LONG).show();
             }
 
             @Override

@@ -1,4 +1,4 @@
-package com.pc.nettols.example;
+package com.pc.nettools.example;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

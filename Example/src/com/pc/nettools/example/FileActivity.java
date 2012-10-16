@@ -1,4 +1,4 @@
-package com.pc.nettols.example;
+package com.pc.nettools.example;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,14 +6,9 @@ import android.view.View;
 import android.widget.Toast;
 import com.pc.nettools.http.AsyncClient;
 import com.pc.nettools.http.AsyncHttpRequest;
-import com.pc.nettools.http.DOMResponseHandler;
 import com.pc.nettools.http.FileResponseHandler;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import java.io.*;
-import java.util.ArrayList;
 
 /**
  * Created by Pietro Caselani

@@ -1,4 +1,4 @@
-package com.pc.nettols.example;
+package com.pc.nettools.example;
 
 import android.content.Context;
 import android.view.LayoutInflater;
