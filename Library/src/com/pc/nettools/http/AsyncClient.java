@@ -1,5 +1,7 @@
 package com.pc.nettools.http;
 
+import com.pc.nettools.AsyncOperation;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -10,23 +12,25 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Pietro Caselani
  */
-public class AsyncClient {
+public class AsyncClient implements AsyncOperation.AsyncOperationObservable {
     private static final int GET_METHOD = 10;
     private static final int POST_METHOD = 11;
 
     private String mBaseLink;
     private HashMap<String, String> mDefaultHeaders;
     private int mTimeout;
-    private HashMap<String, AsyncHttpRequest> mRequests;
+    private Set<AsyncHttpRequest> mRequests;
 
     public AsyncClient(String baseLink) {
         mBaseLink = baseLink;
         mDefaultHeaders = new HashMap<String, String>();
-        mRequests = new HashMap<String, AsyncHttpRequest>();
+        mRequests = new HashSet<AsyncHttpRequest>();
     }
 
     public AsyncClient() {
@@ -72,13 +76,10 @@ public class AsyncClient {
     }
 
     public boolean cancelAllRequests() {
-        String[] keys = new String[mRequests.size()];
-        mRequests.keySet().toArray(keys);
-
         boolean cancelled = true;
 
-        for (String key : keys) {
-            AsyncHttpRequest request = mRequests.get(key);
+        while (mRequests.iterator().hasNext()) {
+            AsyncHttpRequest request = mRequests.iterator().next();
             cancelled &= request.cancel();
         }
 
@@ -130,9 +131,10 @@ public class AsyncClient {
             }
 
             AsyncHttpRequest asyncHttpRequest = new AsyncHttpRequest(responseHandler);
+            asyncHttpRequest.addOperationObserver(this);
             asyncHttpRequest.start(connection);
 
-            mRequests.put(link, asyncHttpRequest);
+            mRequests.add(asyncHttpRequest);
 
             return asyncHttpRequest;
         } catch (MalformedURLException e) {
@@ -172,5 +174,10 @@ public class AsyncClient {
             default:
                 return "GET";
         }
+    }
+
+    @Override
+    public void onOperationFinish(AsyncOperation operation) {
+        mRequests.remove(operation);
     }
 }

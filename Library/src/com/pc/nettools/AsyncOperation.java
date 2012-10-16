@@ -8,13 +8,28 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Looper;
 
+import java.util.ArrayList;
+
 /**
  * Created by Pietro Caselani
  */
 public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Integer, Result> {
     private AsyncOperationListener mOperationListener;
+    private ArrayList<AsyncOperationObservable> mObservers;
 
     protected Exception mException;
+
+    protected AsyncOperation() {
+        mObservers = new ArrayList<AsyncOperationObservable>();
+    }
+
+    public void addOperationObserver(AsyncOperationObservable observer) {
+        mObservers.add(observer);
+    }
+
+    public void removeOperationObserver(AsyncOperationObservable observer) {
+        mObservers.remove(observer);
+    }
 
     public AsyncOperationListener getOperationListener() {
         return mOperationListener;
@@ -77,6 +92,9 @@ public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Int
             if (mException != null && result == null)
                 mOperationListener.onFailure(mException, this);
         }
+
+        for (AsyncOperationObservable observer : mObservers)
+            observer.onOperationFinish(this);
     }
 
     @Override
@@ -91,12 +109,19 @@ public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Int
         super.onCancelled();
 
         if (mOperationListener != null) mOperationListener.onCancelled(this);
+
+        for (AsyncOperationObservable observer : mObservers)
+            observer.onOperationFinish(this);
     }
 
     public interface AsyncOperationListener<Result> {
-        public void onSuccess(Result result, AsyncOperation request);
-        public void onFailure(Exception exception, AsyncOperation request);
-        public void onProgressChanged(int progress, AsyncOperation request);
-        public void onCancelled(AsyncOperation request);
+        public void onSuccess(Result result, AsyncOperation operation);
+        public void onFailure(Exception exception, AsyncOperation operation);
+        public void onProgressChanged(int progress, AsyncOperation operation);
+        public void onCancelled(AsyncOperation operation);
+    }
+
+    public interface AsyncOperationObservable {
+        public void onOperationFinish(AsyncOperation operation);
     }
 }
