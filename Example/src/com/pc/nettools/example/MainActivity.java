@@ -33,19 +33,28 @@ public class MainActivity extends ListActivity {
                 activityClass = BasicAuthActivity.class;
                 break;
             case 3:
-                activityClass = ImagesActivity.class;
-                break;
-            case 4:
                 activityClass = DOMActivity.class;
                 break;
-            case 5:
+            case 4:
                 activityClass = SAXActivity.class;
                 break;
-            case 6:
+            case 5:
                 activityClass = FileActivity.class;
                 break;
-            case 7:
+            case 6:
                 activityClass = TasksActivity.class;
+                break;
+            case 7:
+                activityClass = ImagesNoCacheActivity.class;
+                break;
+            case 8:
+                activityClass = ImagesMemoryCacheActivity.class;
+                break;
+            case 9:
+                activityClass = ImagesDefaultCacheActivity.class;
+                break;
+            default:
+                throw new RuntimeException("wrong index!!!");
         }
 
         Intent intent = new Intent(getApplicationContext(), activityClass);

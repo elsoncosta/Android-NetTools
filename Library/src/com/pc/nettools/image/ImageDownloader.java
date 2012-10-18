@@ -1,33 +1,29 @@
 package com.pc.nettools.image;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
-import com.pc.nettools.http.AsyncClient;
 import com.pc.nettools.http.AsyncHttpRequest;
-
-import java.lang.ref.WeakReference;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.WeakHashMap;
 
 /**
  * Created by Pietro Caselani
  */
 public class ImageDownloader {
-
-    private HashMap<String, Bitmap> mCache;
     private WeakHashMap<ImageView, AsyncHttpRequest> mRequests;
+    private ImageCache mImageCache;
 
-    public ImageDownloader() {
-        mCache = new HashMap<String, Bitmap>();
+    public ImageDownloader(Context context, ImageCache.CacheMode cacheMode) {
+        mImageCache = new ImageCache(context, cacheMode);
         mRequests = new WeakHashMap<ImageView, AsyncHttpRequest>();
     }
 
+    public ImageDownloader(Context context) {
+        this(context, ImageCache.CacheMode.DEFAULT);
+    }
+
     public void download(String link, ImageView imageView) {
-        Bitmap image = getCachedImage(link);
+        Bitmap image = mImageCache.get(link);
 
         if (image == null) forceDownload(link, imageView);
         else {
@@ -53,7 +49,7 @@ public class ImageDownloader {
             AsyncHttpRequest request = AsyncHttpRequest.request(link, new BitmapResponseHandler() {
                 @Override
                 public void onSuccess(Bitmap bitmap, AsyncHttpRequest request, int statusCode) {
-                    cacheImage(request.getURL().toString(), bitmap);
+                    mImageCache.put(request.getURL().toString(), bitmap);
 
                     AsyncHttpRequest otherRequest = mRequests.get(imageView);
 
@@ -75,13 +71,5 @@ public class ImageDownloader {
         }
 
         return true;
-    }
-
-    private Bitmap getCachedImage(String link) {
-        return mCache.get(link);
-    }
-
-    private void cacheImage(String url, Bitmap bitmap) {
-        if (bitmap != null) mCache.put(url, bitmap);
     }
 }

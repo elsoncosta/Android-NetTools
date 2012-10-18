@@ -6,9 +6,11 @@
     <string name="request_post">POST</string>
     <string name="request_get_auth">GET AUTH</string>
 
-    <string name="cancel">Cancelar</string>
+    <string name="cancel">Cancel</string>
     <string name="start">Start</string>
-    <string name="lazy_list">Images list</string>
+    <string name="lazy_list_none">Images list no cache</string>
+    <string name="lazy_list_memory">Images list memory cache</string>
+    <string name="lazy_list_default">Images list default cache</string>
     <string name="dom">Dom</string>
     <string name="sax">Sax</string>
     <string name="file">File</string>
@@ -23,11 +25,13 @@
         <item>@string/request_get</item>
         <item>@string/request_post</item>
         <item>@string/request_get_auth</item>
-        <item>@string/lazy_list</item>
         <item>@string/dom</item>
         <item>@string/sax</item>
         <item>@string/file</item>
         <item>@string/tasks</item>
+        <item>@string/lazy_list_none</item>
+        <item>@string/lazy_list_memory</item>
+        <item>@string/lazy_list_default</item>
     </string-array>
 
 </resources>

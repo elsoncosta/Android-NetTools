@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import com.pc.nettools.image.ImageCache;
 import com.pc.nettools.image.ImageDownloader;
 
 /**
@@ -15,11 +16,11 @@ public class ImageAdapter extends ArrayAdapter<String> {
     private LayoutInflater mInflater;
     private ImageDownloader mImageDownloader;
 
-    public ImageAdapter(Context context, String[] objects) {
+    public ImageAdapter(Context context, String[] objects, ImageCache.CacheMode cacheMode) {
         super(context, R.layout.image_item_layout, objects);
 
         mInflater = LayoutInflater.from(context);
-        mImageDownloader = new ImageDownloader();
+        mImageDownloader = new ImageDownloader(context, cacheMode);
     }
 
     @Override

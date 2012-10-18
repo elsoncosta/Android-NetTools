@@ -16,11 +16,15 @@
         <activity android:name=".GetActivity" android:label="@string/request_get" />
         <activity android:name=".PostActivity" android:label="@string/request_post" />
         <activity android:name=".BasicAuthActivity" android:label="@string/request_get_auth" />
-        <activity android:name=".ImagesActivity" android:label="@string/lazy_list"/>
+        <activity android:name=".ImagesNoCacheActivity" android:label="@string/lazy_list_none"/>
+        <activity android:name=".ImagesMemoryCacheActivity" android:label="@string/lazy_list_memory"/>
+        <activity android:name=".ImagesDefaultCacheActivity" android:label="@string/lazy_list_default"/>
         <activity android:name=".DOMActivity" android:label="@string/dom" />
         <activity android:name=".SAXActivity" android:label="@string/sax"/>
         <activity android:name=".FileActivity" android:label="@string/file"/>
         <activity android:name=".TasksActivity" android:label="@string/tasks"/>
+        <activity android:name=".ImagesDefaultCacheActivity"/>
+        <activity android:name=".ImagesMemoryCacheActivity"/>
 
     </application>
 

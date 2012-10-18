@@ -2,17 +2,19 @@ package com.pc.nettools.example;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import com.pc.nettools.image.ImageCache;
+import com.pc.nettools.image.ImageDownloader;
 
 /**
  * Created by Pietro Caselani
  */
-public class ImagesActivity extends ListActivity {
+public class ImagesDefaultCacheActivity extends ListActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ImageAdapter adapter = new ImageAdapter(getApplicationContext(), URLS);
+        ImageAdapter adapter = new ImageAdapter(getApplicationContext(), URLS, ImageCache.CacheMode.DEFAULT);
         setListAdapter(adapter);
     }
 
