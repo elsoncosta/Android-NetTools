@@ -23,7 +23,7 @@ public class BasicAuthActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_activity);
 
-        client = new AsyncClient(Utils.BASIC_LINK);
+        client = new AsyncClient(Utils.BASIC_LINK, this);
         client.setDefaultAuthentication(Utils.BASIC_USER, Utils.BASIC_PASS);
 
         findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {

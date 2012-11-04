@@ -23,7 +23,7 @@ public class GetActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_activity);
 
-        client = new AsyncClient(Utils.FLIP_LINK);
+        client = new AsyncClient(Utils.FLIP_LINK, this);
 
         findViewById(R.id.btn_request).setOnClickListener(new View.OnClickListener() {
             @Override

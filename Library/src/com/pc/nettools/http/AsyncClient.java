@@ -1,5 +1,8 @@
 package com.pc.nettools.http;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import com.pc.nettools.AsyncOperation;
 
 import java.io.IOException;
@@ -18,7 +21,7 @@ import java.util.Set;
 /**
  * Created by Pietro Caselani
  */
-public class AsyncClient implements AsyncOperation.AsyncOperationObservable {
+public class AsyncClient {
     private static final int GET_METHOD = 10;
     private static final int POST_METHOD = 11;
 
@@ -26,15 +29,25 @@ public class AsyncClient implements AsyncOperation.AsyncOperationObservable {
     private HashMap<String, String> mDefaultHeaders;
     private int mTimeout;
     private Set<AsyncHttpRequest> mRequests;
+    private Context mContext;
 
-    public AsyncClient(String baseLink) {
+    public AsyncClient(String baseLink, Context context) {
         mBaseLink = baseLink;
+        mContext = context;
         mDefaultHeaders = new HashMap<String, String>();
         mRequests = new HashSet<AsyncHttpRequest>();
     }
 
+    public AsyncClient(String baseLink) {
+        this(baseLink, null);
+    }
+
+    public AsyncClient(Context context) {
+        this(null, context);
+    }
+
     public AsyncClient() {
-        this(null);
+        this(null, null);
     }
 
     public void setTimeout(int timeout) {
@@ -131,10 +144,14 @@ public class AsyncClient implements AsyncOperation.AsyncOperationObservable {
             }
 
             AsyncHttpRequest asyncHttpRequest = new AsyncHttpRequest(responseHandler);
-            asyncHttpRequest.addOperationObserver(this);
-            asyncHttpRequest.start(connection);
 
-            mRequests.add(asyncHttpRequest);
+            if (mContext != null) {
+                asyncHttpRequest.setId(mRequests.size() + 1);
+                mRequests.add(asyncHttpRequest);
+                asyncHttpRequest.registerOperationReceiver(mContext, new OperationStatusReceiver());
+            }
+
+            asyncHttpRequest.start(connection);
 
             return asyncHttpRequest;
         } catch (MalformedURLException e) {
@@ -176,8 +193,22 @@ public class AsyncClient implements AsyncOperation.AsyncOperationObservable {
         }
     }
 
-    @Override
-    public void onOperationFinish(AsyncOperation operation) {
-        mRequests.remove(operation);
+    class OperationStatusReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equalsIgnoreCase(AsyncOperation.ACTION_OPERATION_CANCEL) ||
+                    intent.getAction().equalsIgnoreCase(AsyncOperation.ACTION_OPERATION_FINISH)) {
+                int id = intent.getIntExtra(AsyncOperation.EXTRA_OPERATION_ID, -1);
+                if (id > 0) {
+                    for (AsyncHttpRequest request : mRequests) {
+                        if (request.getId() == id) {
+                            mRequests.remove(request);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

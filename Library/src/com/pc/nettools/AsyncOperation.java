@@ -2,34 +2,26 @@ package com.pc.nettools;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Looper;
 
-import java.util.ArrayList;
-
 /**
  * Created by Pietro Caselani
  */
 public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Integer, Result> {
+    public static final String EXTRA_OPERATION_ID = "com.pc.nettools.AsyncOperation.Id";
+    public static final String ACTION_OPERATION_START = "com.pc.nettools.AsyncOperation.Start";
+    public static final String ACTION_OPERATION_FINISH = "com.pc.nettools.AsyncOperation.Finish";
+    public static final String ACTION_OPERATION_CANCEL = "com.pc.nettools.AsyncOperation.Cancel";
+
     private AsyncOperationListener mOperationListener;
-    private ArrayList<AsyncOperationObservable> mObservers;
-
+    private Context mContext;
+    private int mId;
     protected Exception mException;
-
-    protected AsyncOperation() {
-        mObservers = new ArrayList<AsyncOperationObservable>();
-    }
-
-    public void addOperationObserver(AsyncOperationObservable observer) {
-        mObservers.add(observer);
-    }
-
-    public void removeOperationObserver(AsyncOperationObservable observer) {
-        mObservers.remove(observer);
-    }
 
     public AsyncOperationListener getOperationListener() {
         return mOperationListener;
@@ -39,8 +31,17 @@ public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Int
         mOperationListener = requestListener;
     }
 
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int id) {
+        mId = id;
+    }
+
     public void start(Param param) {
         execute(param);
+        sendBroadcast(ACTION_OPERATION_START);
     }
 
     public boolean cancel() {
@@ -75,6 +76,25 @@ public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Int
         return Looper.myLooper() != null && Looper.myLooper() == Looper.getMainLooper();
     }
 
+    public void registerOperationReceiver(Context context, BroadcastReceiver receiver) {
+        if (context != null && receiver != null && !receiver.isOrderedBroadcast()) {
+            mContext = context;
+
+            IntentFilter startIntentFilter = new IntentFilter(ACTION_OPERATION_START);
+            IntentFilter finishIntentFilter = new IntentFilter(ACTION_OPERATION_FINISH);
+            IntentFilter cancelIntentFilter = new IntentFilter(ACTION_OPERATION_CANCEL);
+
+            context.registerReceiver(receiver, startIntentFilter);
+            context.registerReceiver(receiver, finishIntentFilter);
+            context.registerReceiver(receiver, cancelIntentFilter);
+        }
+    }
+
+    public void unregisterOperationReceiver(Context context, BroadcastReceiver receiver) {
+        if (context != null && receiver != null && receiver.isOrderedBroadcast())
+            context.unregisterReceiver(receiver);
+    }
+
     @Override
     protected final Result doInBackground(Param... params) {
         return executeTask(params[0]);
@@ -93,8 +113,7 @@ public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Int
                 mOperationListener.onFailure(mException, this);
         }
 
-        for (AsyncOperationObservable observer : mObservers)
-            observer.onOperationFinish(this);
+        sendBroadcast(ACTION_OPERATION_FINISH);
     }
 
     @Override
@@ -110,8 +129,15 @@ public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Int
 
         if (mOperationListener != null) mOperationListener.onCancelled(this);
 
-        for (AsyncOperationObservable observer : mObservers)
-            observer.onOperationFinish(this);
+        sendBroadcast(ACTION_OPERATION_CANCEL);
+    }
+
+    private void sendBroadcast(String action) {
+        if (mContext != null) {
+            Intent intent = new Intent(action);
+            intent.putExtra(EXTRA_OPERATION_ID, mId);
+            mContext.sendBroadcast(intent);
+        }
     }
 
     public interface AsyncOperationListener<Result> {
@@ -119,9 +145,5 @@ public abstract class AsyncOperation<Param, Result> extends AsyncTask<Param, Int
         public void onFailure(Exception exception, AsyncOperation operation);
         public void onProgressChanged(int progress, AsyncOperation operation);
         public void onCancelled(AsyncOperation operation);
-    }
-
-    public interface AsyncOperationObservable {
-        public void onOperationFinish(AsyncOperation operation);
     }
 }
