@@ -24,7 +24,7 @@ public class TasksActivity extends Activity{
             public void onClick(View view) {
                 AsyncHttpRequest.request(Utils.JSON_TASK, new JSONResponseHandler() {
                     @Override
-                    public void onSuccess(ArrayList json, AsyncHttpRequest request, int statusCode) {
+                    public void onSuccess(Object json, AsyncHttpRequest request, int statusCode) {
                     }
 
                     @Override

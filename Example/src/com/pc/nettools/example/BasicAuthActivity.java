@@ -39,7 +39,7 @@ public class BasicAuthActivity extends Activity {
 
         final AsyncHttpRequest request = client.get(path, new JSONResponseHandler() {
             @Override
-            public void onSuccess(ArrayList json, AsyncHttpRequest request, int statusCode) {
+            public void onSuccess(Object json, AsyncHttpRequest request, int statusCode) {
                 ((TextView) findViewById(R.id.textView_content)).setText(json.toString());
             }
 

@@ -3,6 +3,7 @@ package com.pc.nettools.http;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -13,42 +14,35 @@ import java.util.Iterator;
  * Created by Pietro Caselani
  */
 public class JSONResponseHandler extends HttpResponseHandler {
-    private ArrayList mArray;
-    private HashMap mMap;
+    private Object mJSON;
 
-    public void onSuccess(ArrayList json, AsyncHttpRequest request, int statusCode) {}
-    public void onSuccess(HashMap json, AsyncHttpRequest request, int statusCode) {}
+    public void onSuccess(Object json, AsyncHttpRequest request, int statusCode) {}
 
     @Override
     public void onFinish() {
-        if (mArray != null)
-            onSuccess(mArray, mRequest, mStatusCode);
-        else if (mMap != null)
-            onSuccess(mMap, mRequest, mStatusCode);
+        if (mJSON != null)
+            onSuccess(mJSON, mRequest, mStatusCode);
         else
             onFailure(mException, mRequest, mStatusCode);
     }
 
     @Override
     public Object getResponseObject() {
-        if (mArray != null) return mArray;
-        if (mMap != null) return mMap;
-        return null;
+        return mJSON;
     }
 
     @Override
     public void sendSuccessMessage(ByteArrayOutputStream outputStream) {
         String jsonString = outputStream.toString();
 
-        try {
-            JSONObject jsonObject = new JSONObject(jsonString);
-            mMap = (HashMap) parse(jsonObject);
-        } catch (JSONException e) {
+        if (jsonString == null) throw new IllegalStateException("jsonString can't be null");
+
+        if (jsonString.startsWith("[") || jsonString.startsWith("{")) {
             try {
-                JSONArray jsonArray = new JSONArray(jsonString);
-                mArray = (ArrayList) parse(jsonArray);
-            } catch (JSONException e1) {
-                mException = e1;
+                Object json = new JSONTokener(jsonString).nextValue();
+                mJSON = parse(json);
+            } catch (JSONException e) {
+                mException = e;
             }
         }
     }
