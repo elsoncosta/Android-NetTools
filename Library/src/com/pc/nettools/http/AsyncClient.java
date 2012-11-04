@@ -36,6 +36,7 @@ public class AsyncClient {
         mContext = context;
         mDefaultHeaders = new HashMap<String, String>();
         mRequests = new HashSet<AsyncHttpRequest>();
+        mTimeout = 60000;
     }
 
     public AsyncClient(String baseLink) {
@@ -122,6 +123,7 @@ public class AsyncClient {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(getMethodName(method));
             connection.setReadTimeout(mTimeout);
+            connection.setConnectTimeout(mTimeout);
 
             int size = mDefaultHeaders.size();
             String[] keys = new String[size];
